@@ -3,6 +3,11 @@ import { isSpoofedBot } from "@arcjet/inspect";
 
 export const arcjetProtection = async (req, res, next) => {
   try {
+    // === DEV / POSTMAN BYPASS ===
+    if (process.env.NODE_ENV === "development" || req.headers["x-dev-bypass"]) {
+      return next();
+    }
+
     const decision = await aj.protect(req);
 
     if (decision.isDenied()) {
